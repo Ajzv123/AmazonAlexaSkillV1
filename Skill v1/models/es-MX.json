@@ -1,0 +1,59 @@
+{
+  "invocation": "Leyendo y comprendiendo",
+  "version": "4.0",
+  "intents": [
+    {
+      "name": "LaunchIntent",
+      "phrases": [
+        "abre leyendo y comprendiendo",
+        "empezar leyendo y comprendiendo",
+        "iniciar leyendo y comprendiendo"
+      ]
+    },
+    {
+      "name": "YesIntent",
+      "phrases": [
+        "si",
+        "claro",
+        "okey",
+        "listo"
+      ]
+    },
+    {
+      "name": "NoIntent",
+      "phrases": [
+        "no",
+        "ahora no",
+        "detente"
+      ]
+    },
+    {
+      "name": "NextIntent",
+      "phrases": [
+        "siguiente",
+        "siguiente pregunta",
+        "otra"
+      ]
+    },
+    {
+      "name": "ReadyIntent",
+      "phrases": [
+        "listo para la pregunta",
+        "has la pregunta",
+        "pregunta"
+      ]
+    },
+    {
+      "name": "AnswerIntent",
+      "phrases": [
+        "{answer}"
+      ],
+      "inputs": [
+        {
+          "name": "answer",
+          "type": "AMAZON.SearchQuery"
+        }
+      ]
+    }
+  ]
+}
