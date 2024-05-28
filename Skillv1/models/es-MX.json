@@ -44,10 +44,6 @@
       ]
     },
     {
-      "name": "AnswerIntent",
-      "phrases": [
-        "{answer}"
-      ],
       "inputs": [
         {
           "name": "answer",
