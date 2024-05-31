@@ -1,17 +1,15 @@
 {
-  "invocation": "Leyendo y comprendiendo",
+  "invocation": "leyendo y comprendiendo",
   "version": "4.0",
-  "intents": [
-    {
-      "name": "LaunchIntent",
+  "intents": {
+    "LaunchIntent": {
       "phrases": [
         "abre leyendo y comprendiendo",
         "empezar leyendo y comprendiendo",
         "iniciar leyendo y comprendiendo"
       ]
     },
-    {
-      "name": "YesIntent",
+    "YesIntent": {
       "phrases": [
         "si",
         "claro",
@@ -19,35 +17,28 @@
         "listo"
       ]
     },
-    {
-      "name": "NoIntent",
+    "NoIntent": {
       "phrases": [
         "no",
         "ahora no",
         "detente"
       ]
     },
-    {
-      "name": "NextIntent",
+    "NextIntent": {
       "phrases": [
         "siguiente",
         "siguiente pregunta",
         "otra"
       ]
     },
-    {
-      "name": "ReadyIntent",
+    "ReadyIntent": {
       "phrases": [
         "listo para la pregunta",
         "has la pregunta",
         "pregunta"
       ]
     },
-    {
-      "name": "AnswerIntent",
-      "phrases": [
-        "{answer}"
-      ],
+    "AnswerIntent": {
       "inputs": [
         {
           "name": "answer",
@@ -55,5 +46,5 @@
         }
       ]
     }
-  ]
+  }
 }
