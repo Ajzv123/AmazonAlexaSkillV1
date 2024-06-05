@@ -43,6 +43,10 @@ export class ReadingComponent extends BaseComponent {
   */
   @Intents('LaunchIntent')
   launch() {
+    return this.START();
+  }
+
+  START() {
     return this.$send({
       message: 'Bienvenido a Leyendo y Comprendiendo. Leere un texto y luego te hare unas preguntas ¿Estás listo para comenzar?',
       listen: true,

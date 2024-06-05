@@ -38,13 +38,37 @@
         "pregunta"
       ]
     },
-    "AnswerIntent": {
-      "inputs": [
-        {
-          "name": "answer",
-          "type": "AMAZON.SearchQuery"
-        }
-      ]
+      "AnswerIntent":{
+        "slots": {
+          "answer": {
+            "type": "AMAZON.SearchQuery"
+          }
+        },
+        "phrases": [
+          "la respuesta es {answer}",
+            "mi respuesta es {answer}",
+            "{answer} es mi respuesta"
+        ]
+      }
+  },
+  "alexa": {
+    "interactionModel": {
+      "languageModel": {
+        "intents": [
+          {
+            "name": "AMAZON.CancelIntent",
+            "samples": []
+          },
+          {
+            "name": "AMAZON.HelpIntent",
+            "samples": []
+          },
+          {
+            "name": "AMAZON.StopIntent",
+            "samples": []
+          }
+        ]
+      }
     }
   }
 }

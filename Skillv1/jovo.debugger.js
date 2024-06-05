@@ -1,7 +1,7 @@
 const { DebuggerConfig } = require('@jovotech/plugin-debugger');
 
 const debuggerConfig = new DebuggerConfig({
-  locales: ['en'],
+  locales: ['es-MX'],
   buttons: [
     {
       label: 'LAUNCH',
@@ -19,6 +19,18 @@ const debuggerConfig = new DebuggerConfig({
       label: 'No',
       input: {
         intent: 'NoIntent',
+      },
+    },
+    {
+      label: 'Listo',
+      input: {
+        intent: 'ReadyIntent',
+      },
+    },
+    {
+      label: 'Siguiente',
+      input: {
+        intent: 'NextIntent',
       },
     },
     // ...
