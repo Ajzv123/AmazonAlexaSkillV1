@@ -1,7 +1,7 @@
-import { Component, BaseComponent, Intents, Handle } from '@jovotech/framework';
+import { Component, BaseComponent, Intents, Global, Handle } from '@jovotech/framework';
 import { analyzeText, AnalyzedText } from '../services/ComprehendService';
 import { SessionData } from '../types/SessionData';
-
+Global()
 export interface Passage {
   text: string;
   questions: { question: string; answer: string; type: string }[];
@@ -31,20 +31,9 @@ const passages: Passage[] = [
 
   // Add more passages as needed
 ];
-
+@Global()
 @Component()
 export class ReadingComponent extends BaseComponent {
-
-  /*Change this intent in an similar structure like this: 
-  export class LoveHatePizzaComponent extends BaseComponent {
-  START() {
-    return this.$send(YesNoOutput, { message: 'Do you like pizza?' });
-  }
-  */
-  @Intents('LaunchIntent')
-  launch() {
-    return this.START();
-  }
 
   START() {
     return this.$send({
@@ -52,6 +41,12 @@ export class ReadingComponent extends BaseComponent {
       listen: true,
     });
   }
+  
+  @Intents('LaunchIntent')
+  launch() {
+    return this.START();
+  }
+
   @Intents(['YesIntent', 'NextIntent'])
   async startReading() {
     const passageIndex = Math.floor(Math.random() * passages.length);

@@ -10,6 +10,12 @@ const debuggerConfig = new DebuggerConfig({
       },
     },
     {
+      label: 'Launch',
+      input: {
+        intent: 'LaunchIntent',
+      },
+    },
+    {
       label: 'Yes',
       input: {
         intent: 'YesIntent',
