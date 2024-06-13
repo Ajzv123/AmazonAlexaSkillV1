@@ -1,7 +1,7 @@
 import { Component, BaseComponent, Intents, Global, Handle } from '@jovotech/framework';
 import { analyzeText, AnalyzedText } from '../services/ComprehendService';
 import { SessionData } from '../types/SessionData';
-Global()
+
 export interface Passage {
   text: string;
   questions: { question: string; answer: string; type: string }[];
@@ -49,6 +49,9 @@ export class ReadingComponent extends BaseComponent {
 
   @Intents(['YesIntent', 'NextIntent'])
   async startReading() {
+    if (!this.$session.$data) {
+      this.$session.$data = {};
+    }
     const passageIndex = Math.floor(Math.random() * passages.length);
     const selectedPassage = passages[passageIndex];
     (this.$session.$data as SessionData).passage = selectedPassage;
@@ -66,12 +69,47 @@ export class ReadingComponent extends BaseComponent {
   }
 
   generateQuestions(analysis: AnalyzedText) {
-    const questions: { question: string; answer: string; type: string }[] = [];
+  //   const questions: { question: string; answer: string; type: string }[] = [];
 
-    // Example question types:
-    // Mention 3 {Type} in the text
+  //   // Example question types:
+  //   // Mention 3 {Type} in the text
+  //   const entityTypes = Array.from(new Set(analysis.entities.map((entity: AWS.Comprehend.Entity) => entity.Type)));
+  //   entityTypes.forEach(type => {
+  //     const relevantEntities = analysis.entities.filter((entity: AWS.Comprehend.Entity) => entity.Type === type).map((entity: AWS.Comprehend.Entity) => entity.Text);
+  //     if (relevantEntities.length >= 3) {
+  //       questions.push({
+  //         question: `Menciona 3 ${type?.toLowerCase()}s en el texto`,
+  //         answer: relevantEntities.join(', '),
+  //         type: 'list'
+  //       });
+  //     }
+  //   });
+
+  //   // True or False: The word {Entity} is {Type}
+  //   analysis.entities.forEach((entity: AWS.Comprehend.Entity) => {
+  //     questions.push({
+  //       question: `Verdadero o Falso. La palabra  ${entity.Text} es un(a) ${entity.Type?.toLowerCase() ?? ''}`,
+  //       answer: 'true',
+  //       type: 'truefalse'
+  //     });
+  //   });
+
+  //   // What kind of type is {Type}
+  //   analysis.keyPhrases.forEach((phrase: AWS.Comprehend.KeyPhrase) => {
+  //     questions.push({
+  //       question: `Que tipo de elemento es ${phrase.Text}`,
+  //       answer: 'key phrase',
+  //       type: 'type'
+  //     });
+  //   });
+
+  //   return questions;
+  // }
+  const questions: { question: string; answer: string; type: string }[] = [];
+
+    // Seleccionar una pregunta de tipo "list"
     const entityTypes = Array.from(new Set(analysis.entities.map((entity: AWS.Comprehend.Entity) => entity.Type)));
-    entityTypes.forEach(type => {
+    for (const type of entityTypes) {
       const relevantEntities = analysis.entities.filter((entity: AWS.Comprehend.Entity) => entity.Type === type).map((entity: AWS.Comprehend.Entity) => entity.Text);
       if (relevantEntities.length >= 3) {
         questions.push({
@@ -79,33 +117,55 @@ export class ReadingComponent extends BaseComponent {
           answer: relevantEntities.join(', '),
           type: 'list'
         });
+        break;
       }
-    });
+    }
 
-    // True or False: The word {Entity} is {Type}
-    analysis.entities.forEach((entity: AWS.Comprehend.Entity) => {
+    // Seleccionar una pregunta de tipo "truefalse"
+    for (const entity of analysis.entities) {
       questions.push({
-        question: `Verdadero o Falso. La palabra  ${entity.Text} es un(a) ${entity.Type?.toLowerCase() ?? ''}`,
+        question: `Verdadero o Falso. La palabra ${entity.Text} es un(a) ${entity.Type?.toLowerCase() ?? ''}`,
         answer: 'true',
         type: 'truefalse'
       });
-    });
+      break;
+    }
 
-    // What kind of type is {Type}
-    analysis.keyPhrases.forEach((phrase: AWS.Comprehend.KeyPhrase) => {
-      questions.push({
-        question: `Que tipo de elemento es ${phrase.Text}`,
-        answer: 'key phrase',
-        type: 'type'
-      });
-    });
+    // // Seleccionar una pregunta de tipo "type"
+    // for (const phrase of analysis.keyPhrases) {
+    //   questions.push({
+    //     question: `¿Qué tipo de elemento es ${phrase.Text}?`,
+    //     answer: 'key phrase',
+    //     type: 'type'
+    //   });
+    //   break; // Solo queremos una pregunta de este tipo
+    // }
 
     return questions;
   }
 
   @Intents('ReadyIntent')
   async askQuestion() {
+    if (!this.$session.$data) {
+      this.$session.$data = {};
+    }
+
     const sessionData = this.$session.$data as SessionData;
+    const passageIndex = Math.floor(Math.random() * passages.length);
+    const selectedPassage = passages[passageIndex];
+    (this.$session.$data as SessionData).passage = selectedPassage;
+    (this.$session.$data as SessionData).currentQuestionIndex = 0;
+
+    const analysis: AnalyzedText = await analyzeText(selectedPassage.text);
+    (this.$session.$data as SessionData).analysis = analysis;
+
+    selectedPassage.questions = this.generateQuestions(analysis);
+    console.log('Session Data:', sessionData);
+    console.log('Passage:', (this.$session.$data as SessionData).passage);
+    console.log('Current Question Index:', sessionData.currentQuestionIndex);
+    if (!sessionData || !sessionData.passage || sessionData.currentQuestionIndex === undefined) {
+      return this.START();
+    }
     const passage = sessionData.passage!;
     const currentQuestionIndex = sessionData.currentQuestionIndex!;
     const question = passage.questions[currentQuestionIndex].question;
@@ -117,6 +177,7 @@ export class ReadingComponent extends BaseComponent {
   }
 
   @Intents('AnswerIntent')
+  
   async checkAnswer() {
     const userAnswer = this.$request.value as string;
     if (!userAnswer) {
