@@ -39,6 +39,12 @@ const debuggerConfig = new DebuggerConfig({
         intent: 'NextIntent',
       },
     },
+    {
+      label: 'Respuesta',
+      input:{
+        intent: 'AnswerIntent'
+      }
+    },
     // ...
   ],
 });
